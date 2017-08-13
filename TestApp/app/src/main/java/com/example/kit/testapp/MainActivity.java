@@ -1,8 +1,10 @@
 package com.example.kit.testapp;
 
+import android.Manifest;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StrictMode;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
@@ -29,6 +31,10 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
+
+        ActivityCompat.requestPermissions(MainActivity.this,
+                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                1);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.routeMap);
         mapFragment.getMapAsync(this);
