@@ -2,7 +2,6 @@ package com.example.kit.testapp;
 
 import android.Manifest;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.StrictMode;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -50,11 +49,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .addAll(routePoints)
                 .width(5));
 
-        LatLngBounds bounds = new LatLngBounds(routePoints.get(0),routePoints.get(routePoints.size()-1));//count bound between first and last point
+        LatLngBounds bounds = new LatLngBounds(routePoints.get(0), routePoints.get(routePoints.size() - 1));//count bound between first and last point
 
-        double dist = latlng2distance(routePoints.get(0),routePoints.get(routePoints.size()-1));//count distance
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(bounds.getCenter(), (float)zoomCount(dist)));//move camera
-        t.setText("Distance="+dist+" Zoom="+zoomCount(dist));
+        double dist = latlng2distance(routePoints.get(0), routePoints.get(routePoints.size() - 1));//count distance
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(bounds.getCenter(), (float) zoomCount(dist)));//move camera
+        t.setText("Distance=" + dist + " Zoom=" + zoomCount(dist));
     }
 
 
@@ -87,12 +86,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         double y = Math.sqrt(Math.pow(cl2 * sdelta, 2) + Math.pow(cl1 * sl2 - sl1 * cl2 * cdelta, 2));//math for distance
         double x = sl1 * sl2 + cl1 * cl2 * cdelta;
         double ad = Math.atan2(y, x);
-        double dist = ad * R; // metres count
-        return dist;
+        return ad * R;// metres count
     }
 
-    private double zoomCount (double dist) {//count zoom from distance
-        return -1.37344*Math.log(3.39148*Math.pow(10,-8)*dist);//log function for zoom count
+    private double zoomCount(double dist) {//count zoom from distance
+        return -1.37344 * Math.log(3.39148 * Math.pow(10, -8) * dist);//log function for zoom count
     }
 }
 
