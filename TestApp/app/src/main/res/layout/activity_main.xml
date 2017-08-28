@@ -16,7 +16,7 @@
         android:inputType="textPersonName"
         android:selectAllOnFocus="false"
         android:singleLine="false"
-        android:text="http://my-files.ru/Save/smlej9/invalid.txt"
+        android:text="http://my-files.ru/Save/emy5yp/randomDots.txt"
         android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/btn_json_load"
         app:layout_constraintHorizontal_bias="0.502"

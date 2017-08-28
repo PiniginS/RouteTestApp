@@ -20,6 +20,7 @@ public class Route {
 
     private List<LatLng> routePoints = new LinkedList<>();
     private JSONObject json;
+    private String errorMessage = "No route points";
 
     public Route(String url) {
         try {
@@ -47,6 +48,7 @@ public class Route {
             }
             fos.close();
         } catch (Exception e) {
+            errorMessage = "Download json error";
             throw new Exception(e.getMessage() + "Download json error");
         }
     }
@@ -60,6 +62,7 @@ public class Route {
             is.close();
             json = new JSONObject(new String(buffer, "UTF-8"));
         } catch (Exception e) {
+            errorMessage = "Make json object error";
             throw new Exception(e.getMessage() + "Make json object error");
         }
     }
@@ -73,6 +76,7 @@ public class Route {
                 }
             }
         } catch (Exception e) {
+            errorMessage = "parsing json error";
             throw new Exception(e.getMessage() + "parsing json error");
         }
     }
@@ -83,6 +87,10 @@ public class Route {
 
     public List<LatLng> getRoutePoints() {
         return routePoints;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
     }
 
 }

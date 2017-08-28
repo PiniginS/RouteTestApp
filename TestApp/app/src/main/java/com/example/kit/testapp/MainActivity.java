@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         Route route = new Route(t2.getText().toString());
         List<LatLng> routePoints = route.getRoutePoints();
         if (routePoints.size() == 0) {
-            t.setText("No route points");
+            t.setText(route.getErrorMessage());
             return;
         }
         if (routePoints.size() > 1) {
@@ -60,12 +60,12 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
             LatLngBounds bounds = latLanBuilder.build();
 
-            double dist = latlng2distance(bounds.northeast, bounds.southwest);//count distance
+            double dist = latlng2distance(bounds.northeast, bounds.southwest);//count distance between northeast and southwest points
 
             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(bounds.getCenter(), (float) zoomCount(dist)));//move camera
-            t.setText("Distance=" + dist + " Zoom=" + zoomCount(dist));
+            t.setText("Zoom distance=" + dist + " Zoom=" + zoomCount(dist));
         } else {
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(routePoints.get(0), 19));//move camera
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(routePoints.get(0), 19));//move camera to single point
             t.setText("Single point");
         }
     }
@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         googleMap = map;
     }
 
-    private double latlng2distance(LatLng l1, LatLng l2) {//distance between first and last route points
+    private double latlng2distance(LatLng l1, LatLng l2) {//distance between route points
         double R = 6372795;//earth radius
 
         double lat1 = l1.latitude;
