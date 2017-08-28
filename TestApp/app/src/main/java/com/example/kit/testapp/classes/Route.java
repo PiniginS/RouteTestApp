@@ -2,6 +2,7 @@ package com.example.kit.testapp.classes;
 
 
 import android.os.Environment;
+import android.os.SystemClock;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -13,7 +14,6 @@ import org.json.JSONObject;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,13 +27,19 @@ public class Route {
     List<LatLng> routePoints = new LinkedList<LatLng>();
     JSONObject json;
 
-    public Route (String url) {
-        downloadJson(url);//download json from url
-        makeJsonObject();//make JSONobject from file
-        createRoutePoints();//parce jsone, create route points
+    public Route(String url) {
+        try {
+            downloadJson(url);//download json from url
+            makeJsonObject();//make JSONobject from file
+            createRoutePoints();//parce jsone, create route points
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
-    private void downloadJson(String url){
+    private void downloadJson(String url) throws Exception {
         try {
             URL u = new URL(url);
             InputStream stream = u.openStream();
@@ -44,20 +50,16 @@ public class Route {
             int length;
 
             FileOutputStream fos = new FileOutputStream(new File(Environment.getExternalStorageDirectory() + "/" + "data/route.txt"));
-            while ((length = dis.read(buffer))>0) {
+            while ((length = dis.read(buffer)) > 0) {
                 fos.write(buffer, 0, length);
             }
             fos.close();
-        } catch (MalformedURLException mue) {
-            Log.e("SYNC getUpdate", "malformed url error", mue);
-        } catch (IOException ioe) {
-            Log.e("SYNC getUpdate", "io error", ioe);
-        } catch (SecurityException se) {
-            Log.e("SYNC getUpdate", "security error", se);
+        } catch (Exception e) {
+            throw new Exception(e.getMessage() + "Download json error");
         }
     }
 
-    private void makeJsonObject(){
+    private void makeJsonObject() throws Exception {
         try {
             InputStream is = new FileInputStream(new File(Environment.getExternalStorageDirectory() + "/" + "data/route.txt"));
             int size = is.available();
@@ -65,33 +67,31 @@ public class Route {
             is.read(buffer);
             is.close();
             json = new JSONObject(new String(buffer, "UTF-8"));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            throw new Exception(e.getMessage() + "Make json object error");
         }
     }
 
-    private void createRoutePoints() {
+    private void createRoutePoints() throws Exception {
         try {
-            JSONArray points = json.getJSONArray("coords");
-            for (int i=0;i<points.length();i++) {
-                routePoints.add(new LatLng((Double)points.getJSONObject(i).get("la"),(Double)points.getJSONObject(i).get("lo")));
+            if (json.has("coords")) {
+                JSONArray points = json.getJSONArray("coords");
+                for (int i = 0; i < points.length(); i++) {
+                    routePoints.add(new LatLng((Double) points.getJSONObject(i).get("la"), (Double) points.getJSONObject(i).get("lo")));
+                }
+            } else {
+                return;
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            throw new Exception(e.getMessage() + "parsing json error");
         }
     }
 
-    public JSONObject getJson ()
-    {
+    public JSONObject getJson() {
         return json;
     }
 
-    public List<LatLng> getRoutePoints ()
-    {
+    public List<LatLng> getRoutePoints() {
         return routePoints;
     }
 
