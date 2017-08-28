@@ -45,15 +45,31 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         TextView t2 = (TextView) findViewById(R.id.text_json_url);
         Route route = new Route(t2.getText().toString());
         List<LatLng> routePoints = route.getRoutePoints();
-        googleMap.addPolyline(new PolylineOptions()//add polyline to map
-                .addAll(routePoints)
-                .width(5));
+        if (routePoints.size()==0) {
+            t.setText("No route points");
+            return;
+        }
+        if (routePoints.size()>1) {
+            googleMap.addPolyline(new PolylineOptions()//add polyline to map
+                    .addAll(routePoints)
+                    .width(5));
 
-        LatLngBounds bounds = new LatLngBounds(routePoints.get(0), routePoints.get(routePoints.size() - 1));//count bound between first and last point
+            LatLngBounds.Builder latLanBuilder = LatLngBounds.builder();
+            for (LatLng point : routePoints) {
+                latLanBuilder.include(point);
+            }
+            LatLngBounds bounds = latLanBuilder.build();
 
-        double dist = latlng2distance(routePoints.get(0), routePoints.get(routePoints.size() - 1));//count distance
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(bounds.getCenter(), (float) zoomCount(dist)));//move camera
-        t.setText("Distance=" + dist + " Zoom=" + zoomCount(dist));
+            double dist = latlng2distance(bounds.northeast, bounds.southwest);//count distance
+
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(bounds.getCenter(), (float) zoomCount(dist)));//move camera
+            t.setText("Distance=" + dist + " Zoom=" + zoomCount(dist));
+        }
+        else
+        {
+            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(routePoints.get(0), 19));//move camera
+            t.setText("Single point");
+        }
     }
 
 
