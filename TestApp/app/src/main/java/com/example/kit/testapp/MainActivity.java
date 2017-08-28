@@ -45,11 +45,11 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         TextView t2 = (TextView) findViewById(R.id.text_json_url);
         Route route = new Route(t2.getText().toString());
         List<LatLng> routePoints = route.getRoutePoints();
-        if (routePoints.size()==0) {
+        if (routePoints.size() == 0) {
             t.setText("No route points");
             return;
         }
-        if (routePoints.size()>1) {
+        if (routePoints.size() > 1) {
             googleMap.addPolyline(new PolylineOptions()//add polyline to map
                     .addAll(routePoints)
                     .width(5));
@@ -64,9 +64,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(bounds.getCenter(), (float) zoomCount(dist)));//move camera
             t.setText("Distance=" + dist + " Zoom=" + zoomCount(dist));
-        }
-        else
-        {
+        } else {
             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(routePoints.get(0), 19));//move camera
             t.setText("Single point");
         }

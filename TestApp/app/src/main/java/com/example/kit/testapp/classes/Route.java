@@ -1,40 +1,32 @@
 package com.example.kit.testapp.classes;
 
-
 import android.os.Environment;
-import android.os.SystemClock;
-import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 
 public class Route {
 
-    List<LatLng> routePoints = new LinkedList<LatLng>();
-    JSONObject json;
+    private List<LatLng> routePoints = new LinkedList<>();
+    private JSONObject json;
 
     public Route(String url) {
         try {
             downloadJson(url);//download json from url
             makeJsonObject();//make JSONobject from file
             createRoutePoints();//parce jsone, create route points
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -79,8 +71,6 @@ public class Route {
                 for (int i = 0; i < points.length(); i++) {
                     routePoints.add(new LatLng((Double) points.getJSONObject(i).get("la"), (Double) points.getJSONObject(i).get("lo")));
                 }
-            } else {
-                return;
             }
         } catch (Exception e) {
             throw new Exception(e.getMessage() + "parsing json error");
