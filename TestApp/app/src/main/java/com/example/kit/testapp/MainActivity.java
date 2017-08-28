@@ -104,7 +104,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private double zoomCount(double dist) {//count zoom from distance
-        return -1.37344 * Math.log(3.39148 * Math.pow(10, -8) * dist);//log function for zoom count
+        double zoom = -1.37344 * Math.log(3.39148 * Math.pow(10, -8) * dist);
+        if (zoom < 2) return 2;
+        return zoom;
     }
 }
 
